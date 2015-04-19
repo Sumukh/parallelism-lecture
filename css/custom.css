@@ -1,0 +1,13 @@
+.text-left {
+  float: left;
+  text-transform: none;
+  text-align: left;
+}
+
+.text-normal {
+  text-transform: none !important;
+}
+
+.list-plain {
+  list-style: none;
+}
