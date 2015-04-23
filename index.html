@@ -16,7 +16,7 @@
 
 		<link rel="stylesheet" href="css/reveal.css">
     <link rel="stylesheet" href="css/theme/black.css" id="theme">
-		<link rel="stylesheet" href="css/custom.css" id="theme">
+		<link rel="stylesheet" href="css/custom.css" id="theme2">
 
 		<!-- Code syntax highlighting -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
@@ -49,16 +49,28 @@
 					<p>
 						<small>Sumukh Sridhara</small>
 					</p>
+          <aside class="notes">
+              Based off of CS61A Su12 Lecture 29.
+          </aside>
+
+
 				</section>
 
         <section class="text-left">
           <h2>Announcements</h2>
 
-          <ul class='list-plain'>
-            <li>This is the last lecture for CS98</li>
-          </ul>
+          <p class='fragment'>
+            Re: Adding Macros to Scheme Project. <br>
+            Professor Denero will provide more instructions. <br>
+            For now, just submit project as usual.
+          </p>
+
+          <p class='fragment'>
+            This is the last lecture for CS98
+          </p>
 
           <aside class="notes">
+            Don't worry about adding macros - just submit the scheme project like normal.
               John is out of town.
           </aside>
 
@@ -104,6 +116,7 @@
 
             <aside class="notes">
               Notes: Serial Comparision below.
+              We are running multiple instructions at once - more than one piece of code!
             </aside>
 
 
@@ -130,342 +143,727 @@
 
         </section>
 
-				<section class="text-left">
-					<h2>Why is it important</h2>
-          <p>
-            The real world is parallel.
-          </p>
-          <p class="fragment">
-            Underlying hardware is increasignly parallel.
-          </p>
+        <section>
+  				<section class="text-left">
+  					<h2>Why is it important</h2>
+            <p>
+              The real world is parallel.
+            </p>
+            <p class="fragment">
+              Underlying hardware is increasignly parallel.
+            </p>
 
-          <p class="fragment">
-            Even cell-phones now rely on parallelism!
-          </p>
+            <p class="fragment">
+              Even cell-phones now rely on parallelism!
+            </p>
+
+              <aside class="notes">
+                Notes:
+                In the natural world, many complex, interrelated events are happening at the same time, yet within a temporal sequence.
+
+                Back in the day,
+                Parallel Computing was only useful if you had a LOT of computation work.
+              </aside>
+  				</section>
+
+
+        </section>
+        <section>
+          <section>
+            <h2> Moore's Law </h2>
+            <p> The number of transistors in a CPU doubles every two years </p>
+
+            <p> Interpreted to: Speed of a processor of CPU would double every two years </p>
 
             <aside class="notes">
-              Notes:
-              In the natural world, many complex, interrelated events are happening at the same time, yet within a temporal sequence.
-
-              Next slide has photo
-
-              Back in the day,
-              Parallel Computing was only useful if you had a LOT of computation work. Now
+                Notes: Interpreted to speed doubles.
             </aside>
-				</section>
 
-        <section data-background="http://hothardware.com/articleimages/Item1611/sb-die-map.jpg">
+          </section>
+          <section>
+              <img height="600px" src="http://www.extremetech.com/wp-content/uploads/2015/04/CPU-Scaling.jpg" />
+              <aside class="notes">
+                  Notes: See how transistors are doubling, but clock speed is not.
+                  In 2005, however, mainstream computing hit a wall
+                  Source: http://www.gotw.ca/publications/concurrency-ddj.htm
+              </aside>
+          </section>
+          <section data-background="http://www.wdhafm.com/Pics/AffinityClubs/107751/FreeLunchHeader.jpeg">
+              <aside class="notes">
+                The same program - will become faster - and we didn't even have to do anything. Great!
+
+                Except in 2005 - We couldn't do that anymore. We ran out of GHZ. People were saying Moore's laws was over.
+
+              </aside>
+          </section>
+          <section>
+            <h2>Free Lunch is Over</h2>
+            <p> The same program - was becoming faster without us (programmers) doing anything! </p>
+
+            <p class="fragment"> Except, the speed of a processor stopped increasing. </p>
+
+            <p class="fragment"> So instead of increasing the speed of a single processor. </p>
+            <p class="fragment"> We'll add more processors (cores) to a CPU. </p>
+              <aside class="notes">
+                The same program - will become faster - and we didn't even have to do anything. Great!
+
+                Except in 2005 - We couldn't do that anymore. We ran out of GHZ.
+                See slide below.
+              </aside>
+          </section>
+          <section data-background="http://hothardware.com/articleimages/Item1611/sb-die-map.jpg">
             <aside class="notes">
               Notes:
                 intel i7 mobile chipset.
             </aside>
 
+          </section>
+
         </section>
-        <section>
-          <h2> Moore's Law </h2>
-          <p> The number of transistors in a CPU doubles every two years </p>
-          <p> The number of transistors in a CPU doubles every two years </p>
 
-          <p> Interpreted to: Speed of a processor of CPU would double every two years </p>
-
-          <aside class="notes">
-              Notes: Interpreted to speed doubles.
-          </aside>
+        <section class="text-left">
 
           <section>
-            <img src="http://www.extremetech.com/wp-content/uploads/2015/04/CPU-Scaling.jpg" />
+            <h2>Benefits of parallel computing</h2>
+            <p>
+              Speed!
+            </p>
+            <p>
+              Time & $$$
+            </p>
+            <p>
+              Solve BIG problems.
+            </p>
+              <aside class="notes">
+                Notes:
+                  If you want to run a simulation of the universe.
+              </aside>
+          </section>
+          <section data-background="http://www.hpc-ch.org/wp/wp-content/uploads/2011/08/comparison_spirals.png">
+          </section>
+          <section data-background="http://upload.wikimedia.org/wikipedia/commons/c/c0/Glac_modelled_glacier_change_animation.gif">
+          </section>
+
+        </section>
+
+
+        <section>
+          <section class="text-left">
+            <h2>Load Compute Store </h2>
+            <pre>
+              <code class="python">
+                x = x * 2
+              </code>
+            </pre>
+            <p> Loads the variable(s) on the right hand side </p>
+            <p> Compute the right hand side </p>
+            <p> Store the result into the variable </p>
+          </section>
+        <section>
+        <h2> Load Compute Store </h2>
+          <p class="fragment"> Loads the variable(s) on the right hand side (say x is 5) </p>
+          <p>
+            <pre class="fragment"> <code> x = x (which is 5) * 2</code> </pre>
+          </p>
+          <p class="fragment"> Compute the right hand side </p>
+          <p>
+            <pre class="fragment"> <code class="python"> x * 2 (evaluates to 10)</code> </pre>
+           </p>
+          <p class="fragment"> Store the result into the variable on the left
+           <pre class="fragment"> <code class="python"> x = 10 </code> </pre>
+          </p>
+        </section>
+    </section>
+
+      <section>
+        <section class='text-left'>
+          <h2>Parallel Example</h2>
+          <p> Assume x and y have been set. </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Thread 1</th>
+                <th>Thread 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <pre class="text-larger"> <code> x = x * 2 </code> </pre>
+
+                </td>
+                <td>
+                  <pre class="text-larger"> <code> y = y + 1 </code> </pre>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+              <aside class="notes">
+                Notes:
+                  Two threads do L1,C1,S1 (same for L2, C2, S2). No problems yet.
+                  Let's think about the load compute store order.
+              </aside>
+        </section>
+        <section>
+          <table>
+            <thead>
+              <tr>
+                <th>Thread 1</th>
+                <th>Thread 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <pre> <code> x = x * 2 </code> </pre>
+                </td>
+                <td>
+                  <pre> <code> y = y + 1 </code> </pre>
+                </td>
+              </tr>
+              <tr>
+                <td class="fragment">
+                  Load x (L1) <br>
+                  Compute x*2 (C1) <br>
+                  Store result into x (S1) <br>
+                </td>
+                <td class="fragment">
+                  Load y (L2) <br>
+                  Compute y+1 (C2) <br>
+                  Store result into y (S2) <br>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+              <aside class="notes">
+                Notes:
+                  So this is just what each thread has to do to compute. We haven't talked about parallelism.
+              </aside>
+
+        </section>
+        <section>
+          <h2> Run in parallel </h2>
+          <p> Try to do both at the same time. Interleaving instructions
+          <table>
+            <thead>
+              <tr>
+                <th>Thread 1</th>
+                <th>Thread 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <pre> <code> x = x * 2 </code> </pre>
+                </td>
+                <td>
+                  <pre> <code> y = y + 1 </code> </pre>
+                </td>
+              </tr>
+              <tr>
+                <td> Possible Order:
+                <td>
+                  <p> <span class="fragment"> L1 C1 S1 </span> <span class="fragment"> L2 C2 S2 </span> </p>
+                </td>
+              </tr>
+              <tr class="fragment">
+                <td> Possible Order:
+                <td>
+                  <p> <span class="fragment"> L1 L2 </span> <span class="fragment"> C1 S1 </span> <span class="fragment"> C2 S2 </span> </p>
+                </td>
+              </tr>
+              <tr class="fragment">
+                <td> Possible Order:
+                <td>
+                  <p> <span class="fragment"> L1 L2 </span> <span class="fragment"> C1 C2 </span> <span class="fragment"> S1 S2 </span> </p> etc...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+              <aside class="notes">
+                Notes:
+                  These are possible ordering of executing the instructions.
+
+                  Why do they vary? We don't actually control the exact operating sequence of the machine. It might be thread 2 is delayed - or that it's a bit slower - or that it just so happens that the add and save happens really quickly and so the order goes out of wack.
+              </aside>
+
+        </section>
+
+      </section>
+
+        <section class="text-left">
+          <h2>Shuffling</h2>
+          <p>
+            Parallelism may cause instructions to become shuffled
+          </p>
+          <p class="fragment">
+            Fine - as long the output is correct.
+          </p>
+          <p class="fragment">
+            But what happens when the two threads use/write to the same variable?
+          </p>
+          </table>
+              <aside class="notes">
+                Notes:
+                  Q: Can you think of examples that could cause problems?
+              </aside>
+        </section>
+
+        <section>
+          <section>
+            <p> Assume x is 10.
+            <table>
+              <thead>
+                <tr>
+                  <th>Thread 1</th>
+                  <th>Thread 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <pre> <code> x = x * 2 </code> </pre>
+                  </td>
+                  <td>
+                    <pre> <code> x = x + 1 </code> </pre>
+                  </td>
+                </tr>
+                <tr>
+                  <td> Possible Order:
+                  <td>
+                    <p> <span class="fragment"> L1 C1 </span> <span class="fragment"> L2 C2 </span> <span class="fragment"> S2 S1 </span> </p>
+                  </td>
+                </tr>
+                <tr class="fragment">
+                <td> Execution:
+                </td>
+                  <td>
+
+                  <span class="fragment"> L1: X is 10. C1: Compute 10 * 2 = 20 <br> </span>
+                  <span class="fragment"> L2: X is 10. C2: Compute 10 + 1 = 11 <br></span>
+                  <span class="fragment"> S2: Store 11 into X. <br> S1: Store 20 into X </span>
+                  </td>
+                </tr>
+                <tr class="fragment">
+                  <td> Final Answer </td>
+                  <td> X == 20 <span class="fragment"> ??!!?! Huh? </span> </td>
+                </tr>
+              </tbody>
+            </table>
+                <aside class="notes">
+                  Notes:
+                    This is a possible ordering. We really wanted 21 (think about it serially) - but it's possible it may have lead to 21 - or it could have been 11.
+                </aside>
+
+          </section>
+          <section data-background="http://i1120.photobucket.com/albums/l488/IristheVirus17/oh-noes-everybody-panic.gif">
+          </section>
+      </section>
+
+
+        <section class="text-left">
+          <h2> :( </h2>
+          <p>
+            Parallelism broke our code. We got an incorrect answer!
+          </p>
+          <p class="fragment">
+            Just ran into the dangerous part of parallelism.
+          </p>
+          <p class="fragment">
+            Fast computation with incorrect output is ... useless.
+          </p>
+            <aside class="notes">
+            Notes:
+      What happened here is that we ran into the problem of non-atomic (multi-step) operations.  A thread could be interrupted by another and result in incorrect behavior!
+      (from Tom M. Su12)
+          </aside>
+        </section>
+
+
+				<section>
+					<h2>Practice</h2>
+					<p>
+						z is initialized to 3. <br> What are the possible values of z after parallel computation?
+					</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Thread 1</th>
+                <th>Thread 2</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                 <code> z = z * 3 </code>
+                </td>
+                <td>
+                  <code>y = z + 0 <br> z = z + y</code>
+                </td>
+              </tr>
+              <tr>
+                <td> Possible Output:
+                <td>
+                  <p> <span class="fragment"> 9 </span>
+                <span class="fragment"> , 6 </span>
+                <span class="fragment"> , 18 </span>
+                <span class="fragment"> , 12 </span>
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+            <aside class="notes">
+            Notes:
+              Blank the screen (b) and have them think about how to solve this issue.
+          </aside>
+		  	</section>
+
+        <section>
+          <section data-background="http://upload.wikimedia.org/wikipedia/commons/0/0a/Master_lock.JPG">
+            <h2>Solution: Locks</h2>
+          </section>
+
+          <section class="text-left">
+            <h2> Locks </h2>
+
+            <p> If you want to change data - you have to lock access to the data. </p>
+
+            <p> If someone else has locked the data, you'll have to wait. </p>
+
+            <p> Once you are done - it releases the locks (unlocks) </p>
+
+            <p> Can't change anything until you have locked the data </p>
+
+          </section>
+
+          <section>
+
+          <pre>
+            <code class="python">
+            from Threading import Lock
+            x_lock = Lock()
+            </code>
+          </pre>
+            <table>
+              <thead>
+                <tr>
+                  <th>Thread 1</th>
+                  <th>Thread 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <pre>
+<code class="python">x_lock.acquire()
+x = x * 2
+x_lock.release()</code>
+                    </pre>
+                  </td>
+                  <td>
+                    <pre>
+<code class="python">x_lock.acquire()
+x = x + 1
+x_lock.release()</code>
+                    </pre>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="fragment"> Acquiring/Releasing locks is atomic <br> meaning that they can't be interrupted. </p>
 
           <aside class="notes">
-              Notes: See how transistors are doubling, but clock speed is not.
+            Notes:
+              The first step is to ask to get the lock. If it doesn't get it at this stop - it basically keeps trying to get the lock. Only once it does - it moves on.
+
+              The last release is to allow others to get their turn.
           </aside>
 
           </section>
 
         </section>
 
+        <section>
+          <section class="text-left">
+            <h2> There's a catch. </h2>
+            <p> Locks are powerful. Only one thread changes x at a time if we add locks. </p>
+            <p> but ... </p>
+            <img src="http://austintxpi.com/wp-content/uploads/2013/11/with-great-power-comes-great-responsibility-spider-man.jpeg" />
+          </section>
+
+          <section>
+            <h2> Misusing Locks </h2>
+            <p> What happens if we use two different locks? </p>
+            <pre>
+              <code class="python">
+              from Threading import Lock
+              x_lock1 = Lock()
+              x_lock2 = Lock()
+              </code>
+            </pre>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Thread 1</th>
+                    <th>Thread 2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <pre>
+<code class="python">x_lock1.acquire()
+x = x * 2
+x_lock1.release()</code>
+                      </pre>
+                    </td>
+                    <td>
+                      <pre>
+<code class="python">x_lock2.acquire()
+x = x + 1
+x_lock2.release()</code>
+                      </pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+          </section>
+
+          <section>
+            <h2> Inefficency </h2>
+            <p> What happens if we perform lots of computation during the lock period. </p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Thread 1</th>
+                    <th>Thread 2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <pre>
+  <code class="python">x_lock.acquire()
+long_computation()
+x = x * 2
+x_lock.release()</code>
+                      </pre>
+                    </td>
+                    <td>
+                      <pre>
+  <code class="python">x_lock.acquire()
+x = x + 1
+x_lock.release()</code>
+                      </pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+          <p class="fragment"> Thread 2 can't proceed until the long_computation is done. If long_computation() doesn't change X - it's inefficent to perform it during the lock period. </p>
+          </section>
+          <section>
+            <pre>
+              <code class="python">
+from threading import Lock
+x_lock = Lock()
+y_lock = Lock()
+              </code>
+            </pre>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Thread 1</th>
+                    <th>Thread 2</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <pre>
+<code class="python">x_lock.acquire()
+y_lock.acquire()
+x, y =  1+y, 1+x
+y_lock.release()
+x_lock.release()</code>
+                      </pre>
+                    </td>
+                    <td>
+                      <pre>
+<code class="python">y_lock.acquire()
+x_lock.acquire()
+x, y =  2*y, 3*x
+x_lock.release()
+y_lock.release()</code>
+                      </pre>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        <p> Thread 1 acquires X and Thread 2 acquires Y. What happens? </p>
+          <aside class="notes">
+            Notes:
+              The program can't proceed. Deadlock.
+          </aside>
+
+
+          </section>
+
+        <section data-background="https://boscosgrindhouse.files.wordpress.com/2012/07/spider-man-immagini-dal-film-25.jpg" data-background-transition="zoom">
+
+          <h2> Deadlock </h2>
+
+        </section>
+
+        </section>
+
+        <section>
+          <section class="text-left">
+          <h2> Parallelism Problems </h2>
+
+          <p> You can place most issues with parallelism into 4 categories </p>
+
+          <p class="fragment"> Incorrect Results </p>
+          <p class="fragment"> Inefficent </p>
+          <p class="fragment"> Unfairness </p>
+          <p class="fragment"> Program Crash/Deadlock </p>
+            <aside class="notes">
+              Notes:
+                Explain & Summarize each.
+                Unfairness is giving some threads preference.
+            </aside>
+          </section>
+
+          <section>
+            <h2> Fixing issues </h2>
+
+          <p> There isn't a one size fits all solution. </p>
+          <p class="fragment"> Parallelism requires careful attention. </p>
+          <p class="fragment"> You'll learn more about this in CS 61C. </p>
+          </section>
+        </section>
+
+      <section>
+        <section class="text-left">
+        <h2> Why Still Use Parallelism? </h2>
+
+        <p> It allows for huge speedups. </p>
+        <p> Your program can become 2-1000x faster </p>
+          <aside class="notes">
+            Notes:
+              So if parallelism has a bunch of problems - why use it?
+              Pediatric MRI - 100x faster
+              My CS61C Project - > 3 Gigaflops, 100gflops.
+          </aside>
+        </section>
+
+        <section data-background="http://upload.wikimedia.org/wikipedia/commons/6/67/US_Navy_111006-O-KK908-026_An_MRI_machine_is_set_up_at_the_Role_3_Medical_Facility_at_Joint_Operating_Base,_Bastion,_Afghanistan.jpg">
+
+        </section>
+
+      </section>
+
+
+        <section class="text-left">
+          <h2>For loops</h2>
+          <p> How would you make this for loop faster with 10 threads?  </p>
+          <pre><code data-trim contenteditable>
+for i in range(100):
+  compute(i)
+          </code></pre>
+          <p class="fragment"> You would give each thread a section of the for loop. </p>
+        </section>
+
+
+        <section>
+          <h2>Using C</h2>
+          <p> Parallel code is usually seen more in lower level languages  </p>
+          <p class="fragment"> A lot of parallel code is in the C language (or some variant) </p>
+          <p class="fragment"> C is "low level" - closer to the actual machine instructions. </p>
+          <p class="fragment"> Python is a high level language </p>
+        </section>
+
+      <section>
 				<section>
-					<h2>Point of View</h2>
-					<p>
-						Press <strong>ESC</strong> to enter the slide overview.
-					</p>
-					<p>
-						Hold down alt and click on any element to zoom in on it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Alt + click anywhere to zoom back out.
-					</p>
-				</section>
+					<h2>Parallel Libraries</h2>
+          <p> There are libraries that help programmers write parallel code.  </p>
+          <p class="fragment"> Python has builtin Threading library </p>
+<pre class="fragment"><code data-trim contenteditable>
+import threading
 
-				<section>
-					<h2>Touch Optimized</h2>
-					<p>
-						Presentations look great on touch devices, like mobile phones and tablets. Simply swipe through your slides.
-					</p>
-				</section>
+def worker():
+  print('Worker')
 
-				<section data-markdown>
-					<script type="text/template">
-						## Markdown support
+for i in range(5):
+  t = threading.Thread(target=worker)
+  t.start()
+</code></pre>
+        </section>
 
-						Write content using inline or external Markdown.
-						Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
+        <section>
+          <h2> OpenMP </h2>
 
-						```
-						<section data-markdown>
-						  ## Markdown support
-
-						  Write content using inline or external Markdown.
-						  Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
-						</section>
-						```
-					</script>
-				</section>
-
-				<section>
-					<section id="fragments">
-						<h2>Fragments</h2>
-						<p>Hit the next arrow...</p>
-						<p class="fragment">... to step through ...</p>
-						<p><span class="fragment">... a</span> <span class="fragment">fragmented</span> <span class="fragment">slide.</span></p>
-
-						<aside class="notes">
-							This slide has fragments which are also stepped through in the notes window.
-						</aside>
-					</section>
-					<section>
-						<h2>Fragment Styles</h2>
-						<p>There's different types of fragments, like:</p>
-						<p class="fragment grow">grow</p>
-						<p class="fragment shrink">shrink</p>
-						<p class="fragment roll-in">roll-in</p>
-						<p class="fragment fade-out">fade-out</p>
-						<p class="fragment current-visible">current-visible</p>
-						<p class="fragment highlight-red">highlight-red</p>
-						<p class="fragment highlight-blue">highlight-blue</p>
-					</section>
-				</section>
-
-				<section id="transitions">
-					<h2>Transition Styles</h2>
-					<p>
-						You can select from different transitions, like: <br>
-						<a href="?transition=none#/transitions">None</a> -
-						<a href="?transition=fade#/transitions">Fade</a> -
-						<a href="?transition=slide#/transitions">Slide</a> -
-						<a href="?transition=convex#/transitions">Convex</a> -
-						<a href="?transition=concave#/transitions">Concave</a> -
-						<a href="?transition=zoom#/transitions">Zoom</a>
-					</p>
-				</section>
-
-				<section id="themes">
-					<h2>Themes</h2>
-					<p>
-						reveal.js comes with a few themes built in: <br>
-						<!-- Hacks to swap themes after the page has loaded. Not flexible and only intended for the reveal.js demo deck. -->
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/black.css'); return false;">Black (default)</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/white.css'); return false;">White</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/league.css'); return false;">League</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/sky.css'); return false;">Sky</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/beige.css'); return false;">Beige</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/simple.css'); return false;">Simple</a> <br>
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/serif.css'); return false;">Serif</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/night.css'); return false;">Night</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/moon.css'); return false;">Moon</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/solarized.css'); return false;">Solarized</a>
-					</p>
-				</section>
-
-				<section>
-					<section data-background="#dddddd">
-						<h2>Slide Backgrounds</h2>
-						<p>
-							Set <code>data-background="#dddddd"</code> on a slide to change the background color. All CSS color formats are supported.
-						</p>
-						<a href="#" class="navigate-down">
-							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-						</a>
-					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png">
-						<h2>Image Backgrounds</h2>
-						<pre><code>&lt;section data-background="image.png"&gt;</code></pre>
-					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px">
-						<h2>Tiled Backgrounds</h2>
-						<pre><code style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
-					</section>
-					<section data-background-video="https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.mp4,https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.webm" data-background-color="#000000">
-						<div style="background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px;">
-							<h2>Video Backgrounds</h2>
-							<pre><code style="word-wrap: break-word;">&lt;section data-background-video="video.mp4,video.webm"&gt;</code></pre>
-						</div>
-					</section>
-				</section>
-
-				<section data-transition="slide" data-background="#4d7e65" data-background-transition="zoom">
-					<h2>Background Transitions</h2>
-					<p>
-						Different background transitions are available via the backgroundTransition option. This one's called "zoom".
-					</p>
-					<pre><code>Reveal.configure({ backgroundTransition: 'zoom' })</code></pre>
-				</section>
-
-				<section data-transition="slide" data-background="#b5533c" data-background-transition="zoom">
-					<h2>Background Transitions</h2>
-					<p>
-						You can override background transitions per-slide.
-					</p>
-					<pre><code style="word-wrap: break-word;">&lt;section data-background-transition="zoom"&gt;</code></pre>
-				</section>
-
-				<section>
-					<h2>Pretty Code</h2>
-					<pre><code data-trim contenteditable>
-function linkify( selector ) {
-  if( supports3DTransforms ) {
-
-    var nodes = document.querySelectorAll( selector );
-
-    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-      var node = nodes[i];
-
-      if( !node.className ) {
-        node.className += ' roll';
-      }
-    }
-  }
+          <p class="fragment"> OpenMP - For C and C++ (and Fortran) </p>
+<pre class="fragment"><code data-trim contenteditable>
+#pragma omp parallel for
+for (int i = 0; i < 12; i++) {
+  do_work();
 }
-					</code></pre>
-					<p>Code syntax highlighting courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
+</code></pre>
+          <p class="fragment"> You'll see this in 61C </p>
 				</section>
 
+
+      <section class="text-left">
+        <h2> Parallel Patterns </h2>
+        <img src="http://deliveryimages.acm.org/10.1145/1570000/1562783/figs/f3.jpg" />
+        <p> From CS194-15 </p>
+      </section>
+
+      </section>
+
+      <section class="text-left">
+        <h2> Interested? </h2>
+
+        <p> Classes @ Berkeley: </p>
+
+        <p class="fragment"> CS61C (& CS162) - Parallelism is a section of the course </p>
+        <p class="fragment"> CS194-15 - All about using Parallelism and Patterns </p>
+        <p class="fragment"> CS267 - Applying Parallelism  </p>
+
+
+        <p class="fragment"> I've taken these three courses, I reccomend taking at least one. </p>
+      </section>
+
+      <section class="text-left">
+        <h2> Conclusion </h2>
+
+        <p class="fragment"> Parallelism is an important tool to optimize our programs </p>
+        <p class="fragment"> Every device will be able to take advantage of parallelism </p>
+        <p class="fragment"> Can result in major benefits for programmer </p>
+        <p class="fragment"> But also requires dedicated thought to implement </p>
+
+      </section>
+
+
+
+      <section class="text-left">
+        <h1> Thanks! </h1>
+
+        <p> Any questions? </p>
+
+      </section>
+
+
+
 				<section>
-					<h2>Marvelous List</h2>
+					<h2>References</h2>
 					<ul>
-						<li>No order here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-						<li>Or here</li>
+						<li> This lecture is based off of <a href="http://inst.eecs.berkeley.edu/~cs61a/su12/lec/week08/lec29-1pp.pdf">CS61A Summer 2012 Lecture 29 by Tom M.</a></li>
+						<li><a href="https://computing.llnl.gov/tutorials/parallel_comp/">Intro to Parallelism - LLNL</a></li>
 					</ul>
-				</section>
-
-				<section>
-					<h2>Fantastic Ordered List</h2>
-					<ol>
-						<li>One is smaller than...</li>
-						<li>Two is smaller than...</li>
-						<li>Three!</li>
-					</ol>
-				</section>
-
-				<section>
-					<h2>Tabular Tables</h2>
-					<table>
-						<thead>
-							<tr>
-								<th>Item</th>
-								<th>Value</th>
-								<th>Quantity</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Apples</td>
-								<td>$1</td>
-								<td>7</td>
-							<tr>
-							<tr>
-								<td>Lemonade</td>
-								<td>$2</td>
-								<td>18</td>
-							<tr>
-							<tr>
-								<td>Bread</td>
-								<td>$3</td>
-								<td>2</td>
-							<tr>
-						</tbody>
-					</table>
-				</section>
-
-				<section>
-					<h2>Clever Quotes</h2>
-					<p>
-						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;The nice thing about standards is that there are so many to choose from&rdquo;</q> and block:
-					</p>
-					<blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
-						reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
-					</blockquote>
-				</section>
-
-				<section>
-					<h2>Intergalactic Interconnections</h2>
-					<p>
-						You can link between slides internally,
-						<a href="#/2/3">like this</a>.
-					</p>
-				</section>
-
-				<section>
-					<h2>Speaker View</h2>
-					<p>There's a <a href="https://github.com/hakimel/reveal.js#speaker-notes">speaker view</a>. It includes a timer, preview of the upcoming slide as well as your speaker notes.</p>
-					<p>Press the <em>S</em> key to try it out.</p>
-
-					<aside class="notes">
-						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-					</aside>
-				</section>
-
-				<section>
-					<h2>Export to PDF</h2>
-					<p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, here's an example:</p>
-					<iframe src="//www.slideshare.net/slideshow/embed_code/42840540" width="445" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:3px solid #666; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
-				</section>
-
-				<section>
-					<h2>Global State</h2>
-					<p>
-						Set <code>data-state="something"</code> on a slide and <code>"something"</code>
-						will be added as a class to the document element when the slide is open. This lets you
-						apply broader style changes, like switching the page background.
-					</p>
-				</section>
-
-				<section data-state="customevent">
-					<h2>State Events</h2>
-					<p>
-						Additionally custom events can be triggered on a per slide basis by binding to the <code>data-state</code> name.
-					</p>
-					<pre><code class="javascript" data-trim contenteditable style="font-size: 18px;">
-Reveal.addEventListener( 'customevent', function() {
-	console.log( '"customevent" has fired' );
-} );
-					</code></pre>
-				</section>
-
-				<section>
-					<h2>Take a Moment</h2>
-					<p>
-						Press B or . on your keyboard to pause the presentation. This is helpful when you're on stage and want to take distracting slides off the screen.
-					</p>
-				</section>
-
-				<section>
-					<h2>Much more</h2>
-					<ul>
-						<li>Right-to-left support</li>
-						<li><a href="https://github.com/hakimel/reveal.js#api">Extensive JavaScript API</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#auto-sliding">Auto-progression</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#parallax-background">Parallax backgrounds</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#keyboard-bindings">Custom keyboard bindings</a></li>
-					</ul>
-				</section>
-
-				<section style="text-align: left;">
-					<h1>THE END</h1>
-					<p>
-						- <a href="http://slides.com">Try the online editor</a> <br>
-						- <a href="https://github.com/hakimel/reveal.js">Source code &amp; documentation</a>
-					</p>
 				</section>
 
 			</div>

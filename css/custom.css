@@ -8,6 +8,18 @@
   text-transform: none !important;
 }
 
+.text-larger {
+  font-size: 1em !important;
+}
+
+.text-dark {
+  color: #000000 !important;
+}
+
 .list-plain {
   list-style: none;
+}
+
+pre {
+  box-shadow: none !important;
 }
